@@ -1226,6 +1226,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	//終了処理
 	CoUninitialize();
-	
+
 	return 0;
 }
