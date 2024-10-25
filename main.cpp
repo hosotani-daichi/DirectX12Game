@@ -41,6 +41,11 @@ struct VertexData {
 	Vector3 normal;
 };
 
+struct Test
+{
+	int num;
+};
+
 //ウィンドウプロシージャ
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
@@ -1226,6 +1231,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	//終了処理
 	CoUninitialize();
-
+	
 	return 0;
 }
