@@ -41,11 +41,6 @@ struct VertexData {
 	Vector3 normal;
 };
 
-struct Test
-{
-	int num;
-};
-
 //ウィンドウプロシージャ
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
