@@ -711,10 +711,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	//shaderをコンパイルする
-	IDxcBlob* vertexShaderBlob = CompileShader(L"Resources/shaders/Object3D.VS.hlsl", L"vs_6_0", dxcUtils, dxCompiler, includeHander);
+	IDxcBlob* vertexShaderBlob = CompileShader(L"Object3D.VS.hlsl", L"vs_6_0", dxcUtils, dxCompiler, includeHander);
 	assert(vertexShaderBlob != nullptr);
 
-	IDxcBlob* pixelShaderBlob = CompileShader(L"Resources/shaders/Object3D.PS.hlsl", L"ps_6_0", dxcUtils, dxCompiler, includeHander);
+	IDxcBlob* pixelShaderBlob = CompileShader(L"Object3D.PS.hlsl", L"ps_6_0", dxcUtils, dxCompiler, includeHander);
 	assert(vertexShaderBlob != nullptr);
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature;
@@ -764,12 +764,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	assert(SUCCEEDED(hr));
 
 	//モデル読み込み
-	ModelDate modelDate = LoadObjFile("resources", "plane.obj");
+	//ModelDate modelDate = LoadObjFile("resources", "plane.obj");
 
 	//頂点リソース用のヒープ設定
 	D3D12_HEAP_PROPERTIES uploadHeapProoerties{};
 	uploadHeapProoerties.Type = D3D12_HEAP_TYPE_UPLOAD;//UploadHeapを使う
-	ID3D12Resource* vertexResource = CreateBufferResource(device, sizeof(VertexData) * modelDate.vertices.size());
+	ID3D12Resource* vertexResource = CreateBufferResource(device, sizeof(VertexData) * kVertexCount);
 
 	//頂点バッファービューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
@@ -780,7 +780,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	//頂点リソースにデータを書き込む
 	VertexData* vertexData = nullptr;
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
-	std::memcpy(vertexData, modelDate.vertices.data(), sizeof(VertexData) * modelDate.vertices.size());
+	//std::memcpy(vertexData, modelDate.vertices.data(), sizeof(VertexData) * modelDate.vertices.size());
 
 	//頂点リソースの設定
 	D3D12_RESOURCE_DESC vertexResourceDesc{};
@@ -835,7 +835,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			//a
 			vertexData[start].position.x = cos(lat) * cos(lon);
 			vertexData[start].position.y = sin(lat);
-			vertexData[start].position.z = cos(lat) * sin(lat);
+			vertexData[start].position.z = cos(lat) * sin(lon);
 			vertexData[start].position.w = 1.0f;
 			vertexData[start].texcoord.x = float(lonIndex) / float(kSubdivision);
 			vertexData[start].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
@@ -915,7 +915,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	//書き込むためのアドレスを取得
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 
-	std::memcpy(vertexData, modelDate.vertices.data(), sizeof(VertexData) * modelDate.vertices.size());//頂点リソースをコピー
+	//std::memcpy(vertexData, modelDate.vertices.data(), sizeof(VertexData) * modelDate.vertices.size());//頂点リソースをコピー
 
 	//Sprite用の頂点リソースを作る
 	ID3D12Resource* vertexResourceSprite = CreateBufferResource(device, sizeof(VertexData) * kVertexCount);
@@ -1121,7 +1121,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			//指定した深度で画面全体をクリアする
 			commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-			commandList->DrawInstanced(UINT(modelDate.vertices.size()), 1, 0, 0);
+			commandList->DrawInstanced(UINT(kVertexCount), 1, 0, 0);
 
 			//ImGuiの内部コマンドを生成する
 			ImGui::Render();
