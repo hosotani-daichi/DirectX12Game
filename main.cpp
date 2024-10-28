@@ -495,7 +495,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 		//解放
 		infoQueue->Release();
 	}
-#endif
+
 	//抑制するメッセージのID
 	D3D12_MESSAGE_ID denyIds[] = {
 		//WindowsでのDXGIデバックレイヤーとDX12デバックレイヤーの相互作用バグによるエラーメッセージ
@@ -511,7 +511,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	filter.DenyList.pSeverityList = severities;
 	//指定したメッセージの表示を抑制する
 	infoQueue->PushStorageFilter(&filter);
-
+#endif
 	//コマンドキューを生成する
 	ID3D12CommandQueue* commandQueue = nullptr;
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
@@ -680,10 +680,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	//shaderをコンパイルする
-	IDxcBlob* vertexShaderBlob = CompileShader(L"Object3D.VS.hlsl", L"vs_6_0", dxcUtils, dxCompiler, includeHander);
+	IDxcBlob* vertexShaderBlob = CompileShader(L"Resources/shaders/Object3D.VS.hlsl", L"vs_6_0", dxcUtils, dxCompiler, includeHander);
 	assert(vertexShaderBlob != nullptr);
 
-	IDxcBlob* pixelShaderBlob = CompileShader(L"Object3D.PS.hlsl", L"ps_6_0", dxcUtils, dxCompiler, includeHander);
+	IDxcBlob* pixelShaderBlob = CompileShader(L"Resources/shaders/Object3D.PS.hlsl", L"ps_6_0", dxcUtils, dxCompiler, includeHander);
 	assert(vertexShaderBlob != nullptr);
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature;
@@ -938,7 +938,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			ImGui_ImplDX12_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
-			
+
 			//選択して色が変えられる
 			ImGui::Begin("Window");
 			ImGui::ColorEdit3("color", &materialData->x);//ImGui::DragFloat3("color", &materialData->x, 0.01f);
@@ -1038,7 +1038,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			//TransformationMatrixCBufferの場所を設定
 			commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResourceSprite->GetGPUVirtualAddress());
 			//描画!(DrawCall/ドローコール)
-			commandList->DrawInstanced(UINT(modelDate.vertices.size()), 1, 0, 0);
+			commandList->DrawInstanced(6, 1, 0, 0);
 			commandList->IASetIndexBuffer(&indexBufferViewSprite);//IBVの設定
 			//描画!!(ドローコール)６個のインデックスを使用し１つのインスタンスを描画
 			commandList->DrawIndexedInstanced(4, 1, 0, 0, 0);
@@ -1086,32 +1086,52 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	}
 	//解放処理
+
+	textureResource->Release();
+	transformationMatrixResourceSprite->Release();
+	vertexResourceSprite->Release();
+	indexResourceSprite->Release();
+	wvpResource->Release();
+	materialResource->Release();
+	vertexResource->Release();
+	graphicsPipelineState->Release();
+	depthStencilResource->Release();
+	dsvDescriptorHeap->Release();
+	pixelShaderBlob->Release();
+	vertexShaderBlob->Release();
+	rootSignature->Release();
+	if (errorBlob) {
+		errorBlob->Release();
+	}
+	signatureBlob->Release();
+	includeHander->Release();
+	dxCompiler->Release();
+	dxcUtils->Release();
 	CloseHandle(fenceEvent);
 	fence->Release();
-	rtvDescriptorHeap->Release();
-	swapChainResources[0]->Release();
 	swapChainResources[1]->Release();
+	swapChainResources[0]->Release();
+	srvDescriptorHeap->Release();
+	rtvDescriptorHeap->Release();
 	swapChain->Release();
 	commandList->Release();
 	commandAllocator->Release();
 	commandQueue->Release();
+
+#ifdef DEBUG
+	infoQueue->Release();
+#endif // DEBUG
+
 	device->Release();
 	useAdapter->Release();
 	dxgiFactory->Release();
+
 #ifdef _DEBUG
 	debugController->Release();
 #endif
 	CloseWindow(hwnd);
 
-	vertexResource->Release();
-	graphicsPipelineState->Release();
-	signatureBlob->Release();
-	if (errorBlob) {
-		errorBlob->Release();
-	}
-	rootSignature->Release();
-	pixelShaderBlob->Release();
-	vertexShaderBlob->Release();
+
 
 	//ImGuiの終了処理。
 	ImGui_ImplDX12_Shutdown();
