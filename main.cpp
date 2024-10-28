@@ -15,6 +15,7 @@
 #include"externals/DirectXTex/DirectXTex.h"
 #include<fstream>
 #include<sstream>
+#include<wrl.h>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 #pragma comment(lib,"d3d12.lib")
@@ -24,6 +25,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 struct Vector4 {
 	float x;
+	float y;
 	float y;
 	float z;
 	float w;
@@ -164,6 +166,21 @@ IDxcBlob* CompileShader(
 	return shaderBlob;
 }
 
+class ResourceObject {
+public:
+	ResourceObject(ID3D12Resource*resource)
+		:resource_(resource)
+	{}
+	~ResourceObject() {
+		if (resource_) {
+			resource_->Release();
+		}
+	}
+	ID3D12Resource* Get() { return resource_; }
+private:
+	ID3D12Resource* resource_;
+};
+
 //Resource作成の関数化
 ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes)
 {
@@ -225,7 +242,7 @@ DirectX::ScratchImage LoadTexture(const std::string& filePath)
 }
 
 //CreateTextureResourceを作成する
-ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata)
+ID3D12Resource* CreateTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, const DirectX::TexMetadata& metadata)
 {
 	//metadataを基にResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
@@ -442,7 +459,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	ShowWindow(hwnd, SW_SHOW);
 
-	IDXGIFactory7* dxgiFactory = nullptr;
+	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory = nullptr;
 
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 
@@ -1086,7 +1103,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	}
 	//解放処理
-
 	textureResource->Release();
 	transformationMatrixResourceSprite->Release();
 	vertexResourceSprite->Release();
