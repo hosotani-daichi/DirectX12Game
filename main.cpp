@@ -30,6 +30,7 @@ struct Vector4 {
 	float w;
 };
 
+
 struct Vector2 {
 	float x;
 	float y;
