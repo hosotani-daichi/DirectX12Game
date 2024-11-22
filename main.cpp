@@ -1136,7 +1136,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 			//wvp用のCBufferの場所を設定
 			commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
-
 			commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU);
 			//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
 			commandList->DrawInstanced(UINT(modelDate.vertices.size()), 1, 0, 0);
@@ -1145,14 +1144,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			// =========2Dの描画コマンド =============//
 			//======================================//
 
+			//描画！（DrawCall/ドローコール)。３頂点で１つのインスタンス。インスタンスについては今後
+			//commandList->DrawInstanced(UINT(modelDate.vertices.size()), 1, 0, 0);
+			//commandList->DrawInstanced(UINT(modelDate.vertices.size()), 1, 0, 0);
+
 			commandList->DrawInstanced(UINT(kVertexCount), 10, 0, 0);
 
 			//ImGuiの内部コマンドを生成する
 			ImGui::Render();
-
-			//描画！（DrawCall/ドローコール)。３頂点で１つのインスタンス。インスタンスについては今後
-			//commandList->DrawInstanced(UINT(modelDate.vertices.size()), 1, 0, 0);
-			//commandList->DrawInstanced(UINT(modelDate.vertices.size()), 1, 0, 0);
 
 			//Spriteの描画
 			commandList->IASetVertexBuffers(0, 1, &vertexBufferViewSprite);//VBVを設定
