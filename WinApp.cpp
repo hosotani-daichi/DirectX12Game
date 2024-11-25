@@ -6,6 +6,7 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 //ウィンドウプロシージャ
+
 LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
@@ -28,21 +29,21 @@ void WinApp::Initialize()
 {
 	HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
 
-	//WNDCLASS wc{};
+	WNDCLASS wc{};
 	wc.lpfnWndProc = WindowProc;
 	wc.lpszClassName = L"CG2WindowClass";
-	wc.hInstance = GetModuleHandle(nullptr);
+	wc.hInstance = GetModuleHandle(nullrptr);
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 
 	RegisterClass(&wc);
 
-	//const int32_t kClientWidth = 1280;
-	//const int32_t kClientHeight = 720;
+	const int32_t kClientWidth = 1280;
+	const int32_t kClientHeight = 720;
 
 	RECT wrc = { 0,0,kClientWidth ,kClientHeight };
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
-	/*HWND*/ hwnd = CreateWindow(
+	HWND hwnd = CreateWindow(
 		wc.lpszClassName,
 		L"CG2",
 		WS_OVERLAPPEDWINDOW,
