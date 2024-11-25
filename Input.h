@@ -20,5 +20,11 @@ public:
 private://メンバ変数
 	//キーボードのデバイス
 	ComPtr<IDirectInputDevice8> keyboard;
+
+	bool PushKey(BYTE KeyNumber);
+	bool Triggerkey(BYTE keyNumber);
+	//全キーの入力情報を取得する
+	BYTE key[256] = {};
+
 };
 
