@@ -1,5 +1,4 @@
 #include<Windows.h>
-#include<cstdint>
 #include<string>
 #include<d3d12.h>
 #include<dxgi1_6.h>
@@ -462,6 +461,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	//WindowsAPIの初期化
 	winApp = new WinApp();
 	winApp->Initialize();
+	//WindowsAPI解放
+	delete winApp;
 
 #ifdef _DEBUG
 	Microsoft::WRL::ComPtr <ID3D12Debug1> debugController = nullptr;

@@ -1,6 +1,11 @@
+#include <Windows.h>
+
 #pragma once
 class WinApp
 {
+public://Ãâƒƒ“ƒoŠÖ”
+	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+
 public://ƒƒ“ƒoŠÖ”
 	//‰Šú‰»
 	void Initialize();
