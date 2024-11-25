@@ -7,6 +7,7 @@
 #include<format>
 #include<dxgidebug.h>
 #include<dxcapi.h>
+#include<dxcapi.h>
 #include"externals/imgui/imgui.h"
 #include"externals/imgui/imgui_impl_dx12.h"
 #include"externals/imgui/imgui_impl_win32.h"
@@ -452,6 +453,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	input->initialize(wc.hInstance,hwnd);
 	//入力解放
 	delete input;
+	//入力の更新
+	input->Update();
 
 #ifdef _DEBUG
 	Microsoft::WRL::ComPtr <ID3D12Debug1> debugController = nullptr;
