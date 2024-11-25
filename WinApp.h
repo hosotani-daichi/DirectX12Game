@@ -28,5 +28,7 @@ private:
 
 	//ウィンドウクラスの設定
 	WNDCLASS wc{};
+	//メッセージの処理
+	bool ProcessMessage();
 };
 
