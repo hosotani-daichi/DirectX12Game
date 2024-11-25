@@ -14,7 +14,7 @@ void Input::initialize(HINSTANCE hInstance, HWND hwnd)
 	HRESULT result;
 
 	//DirectInputのインスタンス生成
-	ComPtr<IDirectInput8>directInput = nullptr;
+	/*ComPtr<IDirectInput8>directInput = nullptr;*/
 	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
@@ -57,5 +57,10 @@ bool Input::PushKey(BYTE keyNumber)
 
 bool Input::Triggerkey(BYTE keyNumber)
 {
+	//指定キーを押していればtrueを返す
+	if (keyPre[keyNumber]!=0&& keyPre[keyNumber]) {
+		return true;
+	}
+
 	return false;
 }
