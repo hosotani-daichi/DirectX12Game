@@ -450,17 +450,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	Input* input = nullptr;
 	//入力の初期化
 	input = new Input();
-	input->initialize(winApp->GetHInstance(),winApp->GetHwnd());
+	input->initialize(winApp);
 	//入力解放
 	delete input;
 	//入力の更新
 	input->Update();
 
 	//ポインタ
-	WinApp* winApp = nullptr;
+	WinApp* winApp_ = nullptr;
 	//WindowsAPIの初期化
 	winApp = new WinApp();
 	winApp->Initialize();
+	winApp = nullptr;
+	//WindowAPIの終了処理
+	winApp->Finalize();
 	//WindowsAPI解放
 	delete winApp;
 
