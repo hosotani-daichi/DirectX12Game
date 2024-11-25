@@ -1,4 +1,4 @@
-﻿#include<Windows.h>
+#include<Windows.h>
 #include<cstdint>
 #include<string>
 #include<d3d12.h>
@@ -16,6 +16,7 @@
 #include<fstream>
 #include<sstream>
 #include<wrl.h>
+#include "Input.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 #pragma comment(lib,"d3d12.lib")
@@ -443,6 +444,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 		wc.hInstance,
 		nullptr
 	);
+
+	//ポインタ
+	Input* input = nullptr;
+	//入力の初期化
+	input = new Input();
+	input->initialize(wc.hInstance,hwnd);
+	//入力解放
+	delete input;
 
 #ifdef _DEBUG
 	Microsoft::WRL::ComPtr <ID3D12Debug1> debugController = nullptr;

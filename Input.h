@@ -1,12 +1,12 @@
-
+#include <Windows.h>
 
 #pragma once
 class Input
 {
 public:
-	//‰Šú‰»
-	void initialize();
-	//XV
+	//åˆæœŸåŒ–
+	void initialize(HINSTANCE hInstance, HWND hwnd);
+	//æ›´æ–°
 	void Update();
 };
 
