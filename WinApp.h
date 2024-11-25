@@ -19,9 +19,11 @@ public://メンバ関数
 private:
 	//ウィンドウハンドル
 	HWND hwnd = nullptr;
+
 	//getter
 	HWND GetHwnd() const { return hwnd; }
 	HINSTANCE GetHInstance() const { return wc.hInstance; }
+
 	//ウィンドウクラスの設定
 	WNDCLASS wc{};
 };
