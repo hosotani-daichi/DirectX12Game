@@ -16,7 +16,7 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		//ウィンドウが破棄された
 	case WM_DESTROY:
 		//osに対して、アプリ終了を伝える
-		postQuitMessage(0);
+		PostQuitMessage(0);
 		return 0;
 	}
 

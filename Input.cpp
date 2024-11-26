@@ -20,7 +20,7 @@ void Input::initialize(WinApp* winApp)
 
 	//キーボードデバイス生成
 	//ComPtr<IDirectInputDevice8>keyboard;
-	result = directInput->CreateDevice(GUID_SysKeyboard,&keyboard, NULL);
+	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
 	assert(SUCCEEDED(result));
 
 	//入力データ形式のセット
@@ -32,7 +32,7 @@ void Input::initialize(WinApp* winApp)
 	assert(SUCCEEDED(result));
 
 	//借りてきたWinAppのインスタンスを記録
-	this->winApp=winApp;
+	this->winApp = winApp;
 
 }
 
@@ -61,7 +61,7 @@ bool Input::PushKey(BYTE keyNumber)
 bool Input::Triggerkey(BYTE keyNumber)
 {
 	//指定キーを押していればtrueを返す
-	if (keyPre[keyNumber]!=0&& keyPre[keyNumber]) {
+	if (keyPre[keyNumber] != 0 && keyPre[keyNumber]) {
 		return true;
 	}
 
