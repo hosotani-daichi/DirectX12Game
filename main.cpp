@@ -955,7 +955,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	MSG msg{};
 	while (msg.message != WM_QUIT) {
-		if (winApp->ProcessMessage) {
+		if (winApp->ProcessMessage/*PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)*/) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 			break;
