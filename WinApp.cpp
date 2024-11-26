@@ -17,7 +17,7 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		//ウィンドウが破棄された
 	case WM_DESTROY:
 		//osに対して、アプリ終了を伝える
-		postQuitMessage(0);
+		PostQuitMessage(0);
 		return 0;
 	}
 
@@ -32,7 +32,7 @@ void WinApp::Initialize()
 	WNDCLASS wc{};
 	wc.lpfnWndProc = WindowProc;
 	wc.lpszClassName = L"CG2WindowClass";
-	wc.hInstance = GetModuleHandle(nullrptr);
+	wc.hInstance = GetModuleHandle(nullptr);
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 
 	RegisterClass(&wc);
