@@ -450,7 +450,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	Input* input = nullptr;
 	//入力の初期化
 	input = new Input();
-	input->initialize(winApp);
+	input->Initialize(winApp);
 	//入力解放
 	delete input;
 	//入力の更新
@@ -955,9 +955,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	MSG msg{};
 	while (msg.message != WM_QUIT) {
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+		if (winApp->ProcessMessage) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			break;
 		}
 		else {
 			ImGui_ImplDX12_NewFrame();

@@ -9,7 +9,7 @@
 
 //using namespace Microsoft::WRL;
 
-void Input::initialize(WinApp* winApp)
+void Input::Initialize(WinApp* winApp)
 {
 	HRESULT result;
 

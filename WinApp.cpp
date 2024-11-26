@@ -16,7 +16,7 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		//ウィンドウが破棄された
 	case WM_DESTROY:
 		//osに対して、アプリ終了を伝える
-		postQuitMessage(0);
+		PostQuitMessage(0);
 		return 0;
 	}
 
@@ -39,7 +39,7 @@ void WinApp::Initialize()
 	//const int32_t kClientWidth = 1280;
 	//const int32_t kClientHeight = 720;
 
-	RECT wrc = { 0,0,kClientWidth ,kClientHeight };
+	RECT wrc = { 0,0,kCLientWidth ,kCLientHeight };
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
 	/*HWND*/ hwnd = CreateWindow(
