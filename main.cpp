@@ -450,9 +450,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	Input* input = nullptr;
 	//入力の初期化
 	input = new Input();
-	input->initialize(wc.hInstance,hwnd);
-	//入力解放
-	delete input;
+	input->initialize(wc.hInstance, hwnd);
 	//入力の更新
 	input->Update();
 
@@ -780,7 +778,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();//リソースの先頭のアドレスを使う
 	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelDate.vertices.size());//使用するリソースのサイズは頂点のサイズ
 	vertexBufferView.StrideInBytes = sizeof(VertexData);//1頂点あたりのサイズ
-	
+
 
 	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
 	Microsoft::WRL::ComPtr <ID3D12Resource> materialResource = CreateBufferResource(device.Get(), sizeof(Vector4));//ID3D12Resource* materialResource = CreateBufferResource(device, sizeof(Vector4));
@@ -1042,7 +1040,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			// =========2Dの描画コマンド =============//
 			//======================================//
 
-			
+
 
 			//ImGuiの内部コマンドを生成する
 			ImGui::Render();
@@ -1104,6 +1102,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	}
 	//解放処理
+
+	//入力解放
+	delete input;
 
 	CloseWindow(hwnd);
 
