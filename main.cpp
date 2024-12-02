@@ -411,40 +411,40 @@ struct D3DResourceLeakChecker
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
-	CoInitializeEx(0, COINIT_MULTITHREADED);
+	//InitializeEx(0, COINIT_MULTITHREADED);
 
-	const int32_t kCLientWidth = 1280;
-	const int32_t kCLientHeight = 720;
+	//const int32_t kCLientWidth = 1280;
+	//const int32_t kCLientHeight = 720;
 
-	RECT wrc = { 0,0,kCLientWidth,kCLientHeight };
-	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
-	//出力ウィンドウへの文字出力
-	OutputDebugStringA("Hello,DirectX!\n");
-	WNDCLASS wc{};
-	//ウィンドウプロシージャ
-	wc.lpfnWndProc = WindowProc;
-	//ウィンドウクラス名
-	wc.lpszClassName = L"DirectXGameWindowClass";
-	//インスタンスハンドル
-	wc.hInstance = GetModuleHandle(nullptr);
-	//カーソル
-	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	//ウィンドウクラスを登録する
-	RegisterClass(&wc);
-	//ウィンドウの生成
-	HWND hwnd = CreateWindow(
-		wc.lpszClassName,
-		L"DirectXGame",
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		wrc.right - wrc.left,
-		wrc.bottom - wrc.top,
-		nullptr,
-		nullptr,
-		wc.hInstance,
-		nullptr
-	);
+	//RECT wrc = { 0,0,kCLientWidth,kCLientHeight };
+	//AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
+	////出力ウィンドウへの文字出力
+	//OutputDebugStringA("Hello,DirectX!\n");
+	//WNDCLASS wc{};
+	////ウィンドウプロシージャ
+	//wc.lpfnWndProc = WindowProc;
+	////ウィンドウクラス名
+	//wc.lpszClassName = L"DirectXGameWindowClass";
+	////インスタンスハンドル
+	//wc.hInstance = GetModuleHandle(nullptr);
+	////カーソル
+	//wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	////ウィンドウクラスを登録する
+	//RegisterClass(&wc);
+	////ウィンドウの生成
+	//HWND hwnd = CreateWindow(
+	//	wc.lpszClassName,
+	//	L"DirectXGame",
+	//	WS_OVERLAPPEDWINDOW,
+	//	CW_USEDEFAULT,
+	//	CW_USEDEFAULT,
+	//	wrc.right - wrc.left,
+	//	wrc.bottom - wrc.top,
+	//	nullptr,
+	//	nullptr,
+	//	wc.hInstance,
+	//	nullptr
+	//);
 	//ポインタ
 	WinApp* winApp = nullptr;
 	//WindowsAPIの初期化
@@ -473,7 +473,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 #endif
 
-	ShowWindow(hwnd, SW_SHOW);
+	//ShowWindow(hwnd, SW_SHOW);
 
 	D3DResourceLeakChecker LeakChecker;
 
@@ -740,7 +740,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> dsvDescriptorHeap = CreateDescriptorHeap(device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 	//DepthStencilTextureをウィンドウのサイズで作成
-	Microsoft::WRL::ComPtr <ID3D12Resource> depthStencilResource = CreateDepthStencilTextureResource(device.Get(), kCLientWidth, kCLientHeight);
+	Microsoft::WRL::ComPtr <ID3D12Resource> depthStencilResource = CreateDepthStencilTextureResource(device.Get(), WinApp::kCLientWidth, WinApp::kCLientHeight);
 
 	//DSVの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
@@ -889,8 +889,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	//ビューポート
 	D3D12_VIEWPORT viewport{};
 	//クライアント領域	のサイズと一緒にして画面全体表示
-	viewport.Width = kCLientWidth;
-	viewport.Height = kCLientHeight;
+	viewport.Width = WinApp::kCLientWidth;
+	viewport.Height = WinApp::kCLientHeight;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -900,15 +900,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	D3D12_RECT scissorRect{};
 	//基本的にビューポートと同じ字形が構成される
 	scissorRect.left = 0;
-	scissorRect.right = kCLientWidth;
+	scissorRect.right = WinApp::kCLientWidth;
 	scissorRect.top = 0;
-	scissorRect.bottom = kCLientHeight;
+	scissorRect.bottom = WinApp::kCLientHeight;
 
 	//ImGuiの初期化。
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(hwnd);
+	ImGui_ImplWin32_Init(winApp->GetHwnd());
 	ImGui_ImplDX12_Init
 	(
 		device.Get(),
@@ -983,14 +983,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			//WVPMatrixを作成して設定する
 			Matrix4x4 cameraMatrix = MakeAffineMatrix(cameratransform.scale, cameratransform.rotate, cameratransform.translate);
 			Matrix4x4 viewMatrix = Invers(cameraMatrix);
-			Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kCLientWidth) / float(kCLientHeight), 0.1f, 100.0f);
+			Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(WinApp::kCLientWidth) / float(WinApp::kCLientHeight), 0.1f, 100.0f);
 			Matrix4x4 worldViewprojectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 			*transformationMatrixData = worldViewprojectionMatrix;
 
 			//Sprite用のWorldViewProjectionMatrixを作る
 			Matrix4x4 worldMatrixSprite = MakeAffineMatrix(transformSprite.scale, transformSprite.rotate, transformSprite.translate);
 			Matrix4x4 viewMatrixSprite = MakeIdentity4x4();
-			Matrix4x4 projectionMatrixSprite = MakeOrthographicMatrix(0.0f, 0.0f, float(kCLientWidth), float(kCLientHeight), 0.0f, 100.0f);
+			Matrix4x4 projectionMatrixSprite = MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kCLientWidth), float(WinApp::kCLientHeight), 0.0f, 100.0f);
 			Matrix4x4 worldViewProjectionMatrixSprite = Multiply(worldMatrixSprite, Multiply(viewMatrixSprite, projectionMatrixSprite));
 			*transformationMatrixDataSprite = worldViewProjectionMatrixSprite;
 
@@ -1031,16 +1031,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			//描画用のDescriptorHeapの設定
 			ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap.Get() };
 			commandList->SetDescriptorHeaps(1, descriptorHeaps);
-			commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU);
 			commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, &dsvHandle);
 			//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばいい。
 			commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 			commandList->IASetVertexBuffers(0, 1, &vertexBufferView);//VBVを設定////////////////////////////////////////////////////////////////////////////
 			//マテリアルCBufferの場所を設定
 			commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 			//wvp用のCBufferの場所を設定
 			commandList->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
 
+			commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU);
 			commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU);
 			//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
 			commandList->DrawInstanced(UINT(modelDate.vertices.size()), 1, 0, 0);
@@ -1126,7 +1127,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	ImGui::DestroyContext();
 
 	//終了処理
-	CoUninitialize();
+	//CoUninitialize();
 
 	return 0;
 }
