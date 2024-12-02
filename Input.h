@@ -18,12 +18,13 @@ public:
 	//更新
 	void Update();	
 
+	bool PushKey(BYTE keyNumber);
+	bool Triggerkey(BYTE keyNumber);
+
 private://メンバ変数
 	//キーボードのデバイス
 	//ComPtr<IDirectInputDevice8> keyboard;
 
-	bool PushKey(BYTE keyNumber);
-	bool Triggerkey(BYTE keyNumber);
 	//全キーの入力情報を取得する
 	BYTE key[256] = {};
 	//前回の全キーの状態

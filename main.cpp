@@ -448,25 +448,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	);
 
 	//ポインタ
-	Input* input = nullptr;
-	//入力の初期化
-	input = new Input();
-	input->Initialize(winApp);
-	//入力解放
-	delete input;
-	//入力の更新
-	input->Update();
-
-	//ポインタ
-	WinApp* winApp_ = nullptr;
+	WinApp* winApp = nullptr;
 	//WindowsAPIの初期化
 	winApp = new WinApp();
 	winApp->Initialize();
 	winApp = nullptr;
-	//WindowAPIの終了処理
-	winApp->Finalize();
-	//WindowsAPI解放
-	delete winApp;
+
+	//ポインタ
+	Input* input = nullptr;
+	//入力の初期化
+	input = new Input();
+	input->Initialize(winApp);
+	//入力の更新
+	input->Update();
 
 	//ポインタ
 	DirectXCommon* dxCommon = nullptr;
@@ -591,7 +585,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	swapChainDesc.BufferCount = 2;//ダブルバッファ
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//モニターに映したら、中身を破棄
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
-	/*hr = */dxgiFactory->CreateSwapChainForHwnd(commandQueue.Get(), WinApp->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain.GetAddressOf()));
+	/*hr = */dxgiFactory->CreateSwapChainForHwnd(commandQueue.Get(), winApp->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain.GetAddressOf()));
 	assert(SUCCEEDED(hr));
 
 	//ディスクリプタヒープの生成
@@ -964,7 +958,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	MSG msg{};
 	while (msg.message != WM_QUIT) {
-		if (winApp->ProcessMessage/*PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)*/) {
+		if (winApp->ProcessMessage()/*PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)*/) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 			break;
@@ -1126,7 +1120,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	}
 	//解放処理
 
-	CloseWindow(hwnd);
+		//WindowAPIの終了処理
+	winApp->Finalize();
+
+	//入力解放
+	delete input;
+	//WindowsAPI解放
+	delete winApp;
 
 	//ImGuiの終了処理。
 	ImGui_ImplDX12_Shutdown();

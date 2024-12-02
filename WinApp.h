@@ -1,4 +1,5 @@
-#include <Windows.h>
+ï»¿#include <Windows.h>
+#include <cstdint>
 
 #pragma once
 class WinApp
@@ -7,28 +8,30 @@ public:
 	static const int32_t kCLientWidth = 1280;
 	static const int32_t kCLientHeight = 720;
 
-public://Ãâƒƒ“ƒoŠÖ”
+public://é™å¯‚ãƒ¡ãƒ³ãƒé–¢æ•°
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-public://ƒƒ“ƒoŠÖ”
-	//‰Šú‰»
+public://ãƒ¡ãƒ³ãƒé–¢æ•°
+	//åˆæœŸåŒ–
 	void Initialize();
-	//XV
+	//æ›´æ–°
 	void Update();
-	//I—¹
+	//çµ‚äº†
 	void Finalize();
-
-private:
-	//ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-	HWND hwnd = nullptr;
 
 	//getter
 	HWND GetHwnd() const { return hwnd; }
 	HINSTANCE GetHInstance() const { return wc.hInstance; }
 
-	//ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚Ìİ’è
-	WNDCLASS wc{};
-	//ƒƒbƒZ[ƒW‚Ìˆ—
+	//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡¦ç†
 	bool ProcessMessage();
+
+private:
+
+	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+	HWND hwnd = nullptr;
+
+	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®è¨­å®š
+	WNDCLASS wc{};
 };
 

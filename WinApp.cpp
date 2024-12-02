@@ -1,26 +1,25 @@
-#include "WinApp.h"
+ï»¿#include "WinApp.h"
 #include "Windows.h"
 #include "externals//imgui/imgui.h"
-#include <cstdint>
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-//ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
 LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
 	}
 
-	//ƒƒbƒZ[ƒW‚É‰‚¶‚ÄƒQ[ƒ€ŒÅ—L‚Ìˆ—‚ğs‚¤
+	//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã«å¿œã˜ã¦ã‚²ãƒ¼ãƒ å›ºæœ‰ã®å‡¦ç†ã‚’è¡Œã†
 	switch (msg) {
-		//ƒEƒBƒ“ƒhƒE‚ª”jŠü‚³‚ê‚½
+		//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒç ´æ£„ã•ã‚ŒãŸ
 	case WM_DESTROY:
-		//os‚É‘Î‚µ‚ÄAƒAƒvƒŠI—¹‚ğ“`‚¦‚é
+		//osã«å¯¾ã—ã¦ã€ã‚¢ãƒ—ãƒªçµ‚äº†ã‚’ä¼ãˆã‚‹
 		PostQuitMessage(0);
 		return 0;
 	}
 
-	//•W€‚ÌƒƒbƒZ[ƒWˆ—‚ğs‚¤
+	//æ¨™æº–ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†ã‚’è¡Œã†
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
