@@ -83,12 +83,13 @@ void DirectXCommon::DSVInitialize() {
 void DirectXCommon::FenceInitialize() {
 
 	//フェンス生成
-
+	Microsoft::WRL::ComPtr <ID3D12Fence> fence = nullptr;
 }
 
 void DirectXCommon::ViewPortInitialize() {
 
 	//ビューポート矩形の設定
+	D3D12_VIEWPORT viewport{};
 }
 
 void DirectXCommon::Rectangle() {
