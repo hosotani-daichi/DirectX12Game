@@ -19,12 +19,12 @@ public://メンバ関数
 	//終了
 	void Finalize();
 
+	//メッセージの処理
+	bool ProcessMessage();
+
 	//getter
 	HWND GetHwnd() const { return hwnd; }
 	HINSTANCE GetHInstance() const { return wc.hInstance; }
-
-	//メッセージの処理
-	bool ProcessMessage();
 
 private:
 

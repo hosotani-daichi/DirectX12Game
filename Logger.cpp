@@ -1,6 +1,9 @@
-#include "Logger.h"
+﻿#include "Logger.h"
 
-void Logger::Log(const std::string& message)
-{
-
+namespace Logger {
+	void Logger::Log(const std::string& message)
+	{
+		void Log(const std::string& message);
+	}
+	
 }

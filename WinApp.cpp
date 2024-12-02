@@ -53,6 +53,8 @@ void WinApp::Initialize()
 		nullptr,
 		wc.hInstance,
 		nullptr);
+
+	ShowWindow(hwnd, SW_SHOW);
 }
 
 void WinApp::Update()

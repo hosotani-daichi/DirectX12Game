@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 
-//ƒƒOo—Í
+//ãƒ­ã‚°å‡ºåŠ›
 namespace Logger {
 	void Log(const std::string& message);
 }
