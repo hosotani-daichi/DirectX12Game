@@ -65,7 +65,7 @@ void DirectXCommon::DescriptorHeapGenelate() {
 void DirectXCommon::RTVInitialize() {
 
 	//裏表の2つ分
-	for (uint32_t i = 0; i < ; ++i) {
+	for (uint32_t i = 0; i < RTVHandle; ++i) {
 		//RTVハンドルを取得
 
 		//レンダーターゲットビューの生成
