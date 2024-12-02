@@ -445,27 +445,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 		wc.hInstance,
 		nullptr
 	);
+	//ポインタ
+	WinApp* winApp = nullptr;
+	//WindowsAPIの初期化
+	winApp = new WinApp();
+	winApp->Initialize();
+	//winApp = nullptr;
 
 	//ポインタ
 	Input* input = nullptr;
 	//入力の初期化
 	input = new Input();
 	input->Initialize(winApp);
-	//入力解放
-	delete input;
+
 	//入力の更新
 	input->Update();
 
-	//ポインタ
-	WinApp* winApp_ = nullptr;
-	//WindowsAPIの初期化
-	winApp = new WinApp();
-	winApp->Initialize();
-	winApp = nullptr;
-	//WindowAPIの終了処理
-	winApp->Finalize();
-	//WindowsAPI解放
-	delete winApp;
 
 #ifdef _DEBUG
 	Microsoft::WRL::ComPtr <ID3D12Debug1> debugController = nullptr;
@@ -582,7 +577,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	swapChainDesc.BufferCount = 2;//ダブルバッファ
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//モニターに映したら、中身を破棄
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
-	/*hr = */dxgiFactory->CreateSwapChainForHwnd(commandQueue.Get(), WinApp->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain.GetAddressOf()));
+	/*hr = */dxgiFactory->CreateSwapChainForHwnd(commandQueue.Get(), winApp->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain.GetAddressOf()));
 	assert(SUCCEEDED(hr));
 
 	//ディスクリプタヒープの生成
@@ -791,7 +786,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();//リソースの先頭のアドレスを使う
 	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelDate.vertices.size());//使用するリソースのサイズは頂点のサイズ
 	vertexBufferView.StrideInBytes = sizeof(VertexData);//1頂点あたりのサイズ
-	
+
 
 	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
 	Microsoft::WRL::ComPtr <ID3D12Resource> materialResource = CreateBufferResource(device.Get(), sizeof(Vector4));//ID3D12Resource* materialResource = CreateBufferResource(device, sizeof(Vector4));
@@ -955,7 +950,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	MSG msg{};
 	while (msg.message != WM_QUIT) {
-		if (winApp->ProcessMessage/*PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)*/) {
+		if (winApp->ProcessMessage()/*PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)*/) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 			break;
@@ -1054,7 +1049,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			// =========2Dの描画コマンド =============//
 			//======================================//
 
-			
+
 
 			//ImGuiの内部コマンドを生成する
 			ImGui::Render();
@@ -1116,8 +1111,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 
 	}
 	//解放処理
+	
+	//WindowAPIの終了処理
+	winApp->Finalize();
 
-	CloseWindow(hwnd);
+	//WindowsAPI解放
+	delete winApp;
+	//入力解放
+	delete input;
 
 	//ImGuiの終了処理。
 	ImGui_ImplDX12_Shutdown();
