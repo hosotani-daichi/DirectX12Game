@@ -10,7 +10,7 @@ using namespace Microsoft::WRL;
 void DirectXCommon::Initialize(WinApp* winApp)
 {
 
-		//NULL検出
+	//NULL検出
 	assert(winApp);
 	//メンバ変数に記録
 	this->winApp = winApp;
@@ -36,7 +36,7 @@ void DirectXCommon::CommandAllocatorInitialize() {
 void DirectXCommon::SwapChainGenelate() {
 
 	//スワップチェーン生成の設定
-	
+
 	//スワップチェーンを生成する
 	Microsoft::WRL::ComPtr <IDXGISwapChain4> swapChain = nullptr;
 }
@@ -64,7 +64,7 @@ void DirectXCommon::DescriptorHeapGenelate() {
 void DirectXCommon::RTVInitialize() {
 
 	//裏表の2つ分
-	for (uint32_t i = 0; i < RTVHandle; ++i) {
+	for (uint32_t i = 0; i < //RTVハンドルの要素数; ++i) {
 		//RTVハンドルを取得
 
 		//レンダーターゲットビューの生成

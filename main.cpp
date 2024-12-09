@@ -466,7 +466,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	DirectXCommon* dxCommon = nullptr;
 	//DirectXの初期化
 	dxCommon = new DirectXCommon();
-	dxCommon->Initialize();
+	dxCommon->Initialize(winApp);
 
 
 #ifdef _DEBUG
