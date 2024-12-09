@@ -7,7 +7,6 @@
 using namespace Microsoft::WRL;
 
 
-
 void DirectXCommon::Initialize(WinApp* winApp)
 {
 
