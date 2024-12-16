@@ -26,19 +26,21 @@ void DirectXCommon::Initialize(WinApp* winApp)
 //コマンド関連
 void DirectXCommon::CreateCommand()
 {
-
-
+	//コマンドキューを生成する
+	Microsoft::WRL::ComPtr <ID3D12CommandQueue> commandQueue = nullptr;
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
 	//コマンドキュー生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 
 	//コマンドアロケータを生成する
+	Microsoft::WRL::ComPtr <ID3D12CommandAllocator> commandAllocator = nullptr;
 	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
 	//コマンドアロケータの生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 
 	//コマンドリストを生成する
+	Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> commandList = nullptr;
 	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator.Get(), nullptr, IID_PPV_ARGS(&commandList));
 	//コマンドリストの生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
@@ -60,6 +62,7 @@ void DirectXCommon::CreateSwapChain()
 	assert(SUCCEEDED(hr));//P16までやった
 }
 
+//深度バッファの生成
 void DirectXCommon::DepthCreateBufferView()
 {
 
@@ -128,14 +131,11 @@ void DirectXCommon::DepthCreateBufferView()
 		assert(false);
 	}
 
-
-
 	//バイナリを元に生成
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = nullptr;
 	hr = device->CreateRootSignature(0,
 		signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(hr));
-
 
 	//InputLayout
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
@@ -150,8 +150,6 @@ void DirectXCommon::DepthCreateBufferView()
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
 	inputLayoutDesc.pInputElementDescs = inputElementDescs;
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
-
-
 
 	//shaderをコンパイルする
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = CompileShader(L"Resources/Shaders/Object3D.VS.hlsl", L"vs_6_0");
@@ -187,11 +185,9 @@ void DirectXCommon::DepthCreateBufferView()
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
-
 	//DepthStencilの設定
 	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
 
 	//実際に生成
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState = nullptr;
@@ -217,6 +213,7 @@ void DirectXCommon::CreateAllDescriptorHeap()
 	assert(SUCCEEDED(hr));
 }
 
+//レンダーターゲットビュー
 void DirectXCommon::RTVInitialize()
 {
 	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResources[0]));
