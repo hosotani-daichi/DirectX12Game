@@ -152,10 +152,10 @@ void DirectXCommon::DepthCreateBufferView()
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
 
 	//shaderをコンパイルする
-	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = CompileShader(L"Resources/Shaders/Object3D.VS.hlsl", L"vs_6_0");
+	Microsoft::WRL::ComPtr <IDxcBlob> vertexShaderBlob = CompileShader(L"Resources/shaders/Object3D.VS.hlsl", L"vs_6_0", dxcUtils.Get(), dxCompiler.Get(), includeHander.Get());
 	assert(vertexShaderBlob != nullptr);
 
-	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = CompileShader(L"Resources/Shaders/Object3D.PS.hlsl", L"ps_6_0");
+	Microsoft::WRL::ComPtr <IDxcBlob> pixelShaderBlob = CompileShader(L"Resources/shaders/Object3D.PS.hlsl", L"ps_6_0", dxcUtils.Get(), dxCompiler.Get(), includeHander.Get());
 	assert(vertexShaderBlob != nullptr);
 
 	//Blendstartの設定
@@ -319,10 +319,16 @@ void DirectXCommon::ImGuiInitilize()
 	);
 }
 
-
-
-
-Microsoft::WRL::ComPtr<IDxcBlob> DirectXCommon::CompileShader(const std::wstring& filePath, const wchar_t* profile)
+//コンパイルシェーダー
+Microsoft::WRL::ComPtr<IDxcBlob> DirectXCommon::CompileShader(
+	//CompilerするShaderファイルへのパス
+	const std::wstring& filePath,
+	//Compilerに使用するProfile
+	const wchar_t* profile,
+	//初期化で生成したものを３つ
+	Microsoft::WRL::ComPtr <IDxcUtils> dxcUtils,
+	Microsoft::WRL::ComPtr <IDxcCompiler3> dxcCompiler,
+	Microsoft::WRL::ComPtr <IDxcIncludeHandler> includeHandler)
 {
 	//これからシェーダーをコンパイルする旨をログに出す
 	Logger::Log(StringUtility::ConvertString(std::format(L"Begin CompilerShader,path:{},profile{}\n", filePath, profile)));
@@ -381,7 +387,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> DirectXCommon::CompileShader(const std::wstring
 Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible)
 
 {
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
+	Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> descriptorHeap = nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
 	descriptorHeapDesc.Type = heapType;
 	descriptorHeapDesc.NumDescriptors = numDescriptors;
@@ -393,14 +399,13 @@ Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeap
 
 void DirectXCommon::CreateDevice()
 {
-	dxgiFactory = nullptr;
+	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory = nullptr;
 
-	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
+	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 
 	assert(SUCCEEDED(hr));
 
-
-	Microsoft::WRL::ComPtr<IDXGIAdapter4> useAdapter = nullptr;
+	Microsoft::WRL::ComPtr <IDXGIAdapter4> useAdapter = nullptr;
 
 	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i)
 	{
@@ -408,13 +413,14 @@ void DirectXCommon::CreateDevice()
 		hr = useAdapter->GetDesc3(&adapterDesc);
 		assert(SUCCEEDED(hr));
 		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-			Logger::Log(StringUtility::ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
+			Log(std::format(L"Use Adapter:{}\n", adapterDesc.Description));
 			break;
 		}
 		useAdapter = nullptr;
 	}
 	assert(useAdapter != nullptr);
 
+	Microsoft::WRL::ComPtr <ID3D12Device> device = nullptr;
 
 	D3D_FEATURE_LEVEL featureLevels[] = {
 	D3D_FEATURE_LEVEL_12_2, D3D_FEATURE_LEVEL_12_1, D3D_FEATURE_LEVEL_12_0
@@ -425,13 +431,12 @@ void DirectXCommon::CreateDevice()
 	for (size_t i = 0; i < _countof(featureLevels); ++i) {
 		hr = D3D12CreateDevice(useAdapter.Get(), featureLevels[i], IID_PPV_ARGS(&device));
 		if (SUCCEEDED(hr)) {
-			Logger::Log(std::format("FeatureLevel:{}\n", featureLevelStrings[i]));
+			Log(std::format("FeatureLevel:{}\n", featureLevelStrings[i]));
 			break;
 		}
 	}
 
 	assert(device != nullptr);
-
 
 	Logger::Log("Complete create D3D12Device!!!\n");
 }
@@ -453,14 +458,13 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencilTextureR
 	D3D12_HEAP_PROPERTIES heapProperties{};
 	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;//VRAM上に作る
 
-
 	//深度値のクリア設定
 	D3D12_CLEAR_VALUE depthClearValue{};
 	depthClearValue.DepthStencil.Depth = 1.0f;//1.0f(最大値)でクリア
 	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//フォーマット。Resourceと合わせる
 
 	//Resourceの生成
-	Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
+	Microsoft::WRL::ComPtr <ID3D12Resource> resource = nullptr;
 	HRESULT hr = device->CreateCommittedResource(
 		&heapProperties,
 		D3D12_HEAP_FLAG_NONE,//Heapの特殊な設定。特になし。

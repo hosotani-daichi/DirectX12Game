@@ -18,11 +18,15 @@ public://メンバ変数
 	void Initialize(WinApp* winApp);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource>CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
-	Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(
+	Microsoft::WRL::ComPtr<IDxcBlob>CompileShader(
 		//CompilerするShaderファイルへのパス
 		const std::wstring& filePath,
 		//Compilerに使用するProfile
-		const wchar_t* profile);
+		const wchar_t* profile,
+		//初期化で生成したものを３つ
+		Microsoft::WRL::ComPtr <IDxcUtils> dxcUtils,
+		Microsoft::WRL::ComPtr <IDxcCompiler3> dxcCompiler,
+		Microsoft::WRL::ComPtr <IDxcIncludeHandler> includeHandler);
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
