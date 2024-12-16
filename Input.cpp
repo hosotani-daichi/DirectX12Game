@@ -14,7 +14,7 @@ void Input::Initialize(WinApp* winApp)
 	HRESULT result;
 
 	//DirectInputのインスタンス生成
-	/*ComPtr<IDirectInput8>directInput = nullptr;*/
+	ComPtr<IDirectInput8>directInput = nullptr;
 	result = DirectInput8Create(winApp->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
@@ -61,7 +61,7 @@ bool Input::PushKey(BYTE keyNumber)
 bool Input::Triggerkey(BYTE keyNumber)
 {
 	//指定キーを押していればtrueを返す
-	if (keyPre[keyNumber]!=0&& keyPre[keyNumber]) {
+	if (keyPre[keyNumber]!=0&& keyPre[keyNumber]==0) {
 		return true;
 	}
 
