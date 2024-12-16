@@ -34,7 +34,7 @@ private://関数
 
 	//デバイスの生成
 
-	void CreateDevice();
+	//void CreateDevice();
 	//コマンド関連の生成
 	void CreateCommand();
 	//スワップチェーンの生成
