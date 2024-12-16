@@ -69,15 +69,15 @@ private://関数
 	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
 private://メンバ変数
 
-	HRESULT hr;
+	HRESULT hr{};
 
 	//WindosAPI
 	WinApp* winApp_ = nullptr;
 
 	//DirectX12デバイス
-	Microsoft::WRL::ComPtr<ID3D12Device> device;
+	Microsoft::WRL::ComPtr<ID3D12Device> device = nullptr;
 	//DXGIファクトリ
-	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory;
+	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory = nullptr;
 
 	//コマンド関連の初期化
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
@@ -95,8 +95,8 @@ private://メンバ変数
 
 	//SwapChainからresourceを引っ張ってくる
 
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap = nullptr;
 	//Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap;
 
 	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHander = nullptr;
@@ -105,9 +105,9 @@ private://メンバ変数
 	static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
 	static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
-	uint32_t desriptorSizeSRV;
-	uint32_t desriptorSizeRTV;
-	uint32_t desriptorSizeDSV;
+	uint32_t desriptorSizeSRV = 0;
+	uint32_t desriptorSizeRTV = 0;
+	uint32_t desriptorSizeDSV = 0;
 
 	//スワップチェーンリソース
 	std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, 2>swapChainResources;
