@@ -957,7 +957,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 	//単位行列を書き込んでおく
 	*wvpData = MakeIdentity4x4();
 
-	ID3D12Resource* materialResource = CreateBufferResource(device, sizeof(DirectionalLight));
+	/*ID3D12Resource* */materialResource = CreateBufferResource(device, sizeof(DirectionalLight));
 	DirectionalLight* DirectionalLightData = nullptr;
 	wvpResource->Map(0, nullptr, reinterpret_cast<void**>(&DirectionalLightData));
 
