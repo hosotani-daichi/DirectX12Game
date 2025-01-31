@@ -49,7 +49,6 @@ struct TransformationMatrix {
 struct Material {
 	Vector4 color;
 	int32_t enableLighting;
-	float psd[3];
 	float shininess;
 };
 
