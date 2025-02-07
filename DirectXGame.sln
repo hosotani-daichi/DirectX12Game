@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXGame", "DirectXGame.vcxproj", "{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXGame", "DirectXGame.vcxproj", "{FE9948D5-CCD7-4D04-A384-855390C184F9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{36E2A7F1-65CE-4C46-9491-008D8BCE7B2C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{8C309BAD-D693-4105-AA0D-BFC2A96367C0}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
@@ -25,24 +25,24 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Debug|ARM64.ActiveCfg = Debug|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Debug|ARM64.Build.0 = Debug|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Debug|x64.ActiveCfg = Debug|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Debug|x64.Build.0 = Debug|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Debug|x86.ActiveCfg = Debug|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Debug|x86.Build.0 = Debug|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Profile|ARM64.ActiveCfg = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Profile|ARM64.Build.0 = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Profile|x64.ActiveCfg = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Profile|x64.Build.0 = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Profile|x86.ActiveCfg = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Profile|x86.Build.0 = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Release|ARM64.ActiveCfg = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Release|ARM64.Build.0 = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Release|x64.ActiveCfg = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Release|x64.Build.0 = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Release|x86.ActiveCfg = Release|x64
-		{20E8A4D7-DA0E-4C1A-989E-7355F72297A7}.Release|x86.Build.0 = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Debug|ARM64.ActiveCfg = Debug|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Debug|ARM64.Build.0 = Debug|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Debug|x64.ActiveCfg = Debug|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Debug|x64.Build.0 = Debug|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Debug|x86.ActiveCfg = Debug|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Debug|x86.Build.0 = Debug|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Profile|ARM64.ActiveCfg = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Profile|ARM64.Build.0 = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Profile|x64.ActiveCfg = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Profile|x64.Build.0 = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Profile|x86.ActiveCfg = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Profile|x86.Build.0 = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Release|ARM64.ActiveCfg = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Release|ARM64.Build.0 = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Release|x64.ActiveCfg = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Release|x64.Build.0 = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Release|x86.ActiveCfg = Release|x64
+		{FE9948D5-CCD7-4D04-A384-855390C184F9}.Release|x86.Build.0 = Release|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Debug|ARM64.ActiveCfg = Debug|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Debug|x64.ActiveCfg = Debug|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Debug|x64.Build.0 = Debug|x64
@@ -60,6 +60,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B7F4FF59-3F67-4577-9FF2-742171FE924A}
+		SolutionGuid = {1E197797-8DBD-405B-A2DB-A0C6151EF1ED}
 	EndGlobalSection
 EndGlobal
