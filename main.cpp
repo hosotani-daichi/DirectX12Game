@@ -78,6 +78,11 @@ struct Emitter {
 	float frequencyTime;
 };
 
+struct AccelerationField {
+	Vector3 acceleration;
+	AABB area;
+};
+
 // ウインドウプロシーシャ
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
@@ -416,6 +421,80 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 	return modelData;
 }
 
+// ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename) {
+//	// 1. 中で必要となる変数の宣言
+//	ModelData modelData; // 構築するModelData
+//	std::vector<Vector4> positions; // 位置
+//	std::vector<Vector3> normals; // 法線
+//	std::vector<Vector2> texcoords; // テクスチャ座標
+//	std::string line; // ファイルから読んだ1行を格納するもの
+//
+//	// 2. ファイルを開く
+//	std::ifstream file(directoryPath + "/" + filename); // ファイルを開く
+//	assert(file.is_open()); // とりあえず開けなかったら止める
+//	// 3. 実際にファイルを読み、ModelDataを構築していく
+//	while (std::getline(file, line))
+//	{
+//		std::string identifier;
+//		std::istringstream s(line);
+//		s >> identifier; // 先頭の識別子を読む
+//
+//		// identifierに応じた処理
+//		if (identifier == "v") {
+//			Vector4 position;
+//			s >> position.x >> position.y >> position.z;
+//			position.w = 1.0f;
+//			positions.push_back(position);
+//		} else if (identifier == "vt") {
+//			Vector2 texcoord;
+//			s >> texcoord.x >> texcoord.y;
+//			texcoords.push_back(texcoord);
+//		} else if (identifier == "vn") {
+//			Vector3 normal;
+//			s >> normal.x >> normal.y >> normal.z;
+//			normals.push_back(normal);
+//		} else if (identifier == "f") {
+//			VertexData triangle[3];
+//
+//			// 面は三角形限定。その他は未対応
+//			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
+//				std::string vertexDefinition;
+//				s >> vertexDefinition;
+//				// 頂点の要素へのIndexは「位置/UV/法線」で格納されているので、分解してIndexを取得する
+//				std::istringstream v(vertexDefinition);
+//				uint32_t elementIndices[3];
+//				for (int32_t element = 0; element < 3; ++element) {
+//					std::string index;
+//					std::getline(v, index, '/'); // /区切りでインデックスを読んでいく
+//					elementIndices[element] = std::stoi(index);
+//				}
+//				// 要素へのIndexから、実際の要素を値を取得して、頂点を構築する
+//				Vector4 position = positions[elementIndices[0] - 1];
+//				Vector2 texcoord = texcoords[elementIndices[1] - 1];
+//				Vector3 normal = normals[elementIndices[2] - 1];
+//				//VertexData vertex = { position, texcoord, normal };
+//				//modelData.vertices.push_back(vertex);
+//				position.x *= -1.0f;
+//				texcoord.y = 1.0f - texcoord.y;
+//				normal.x *= -1.0f;
+//				triangle[faceVertex] = { position, texcoord, normal };
+//			}
+//			// 頂点を逆順で登録することで、周り順を逆にする
+//			modelData.vertices.push_back(triangle[2]);
+//			modelData.vertices.push_back(triangle[1]);
+//			modelData.vertices.push_back(triangle[0]);
+//		} else if (identifier == "mtllib") {
+//			// materialTemplateLibraryファイルの名前を取得する
+//			std::string materialFilename;
+//			s >> materialFilename;
+//			// 基本的にobjファイルと同一階層にmtlは存在させるので、ディレクトリ名とファイル名を渡す
+//			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
+//		}
+//	}
+//	// 4. ModelDataを返す
+//	return modelData;
+// }
+
 D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	handleCPU.ptr += (descriptorSize * index);
@@ -427,7 +506,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descrip
 	return handleGPU;
 }
 
-Particle MakeNewParticle(std::mt19937& randomEngine,const Vector3 &translate) {
+Particle MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate) {
 	std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
 	std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
 	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
@@ -447,10 +526,10 @@ Particle MakeNewParticle(std::mt19937& randomEngine,const Vector3 &translate) {
 	return particle;
 }
 
-std::list<Particle> Emit(const Emitter& emitter, std::mt19937& randomEngine) { 
+std::list<Particle> Emit(const Emitter& emitter, std::mt19937& randomEngine) {
 	std::list<Particle> particles;
 	for (uint32_t count = 0; count < emitter.count; ++count) {
-		particles.push_back(MakeNewParticle(randomEngine,emitter.transform.translate));
+		particles.push_back(MakeNewParticle(randomEngine, emitter.transform.translate));
 	}
 	return particles;
 }
@@ -901,6 +980,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size()); // 頂点データをリソースのコピー
 
+	// 左下
+	// vertexData[0].position = { -0.5f,-0.5f,0.0f,1.0f };
+	// vertexData[0].texcoord = { 0.0f,1.0f };
+	////上
+	// vertexData[1].position = { 0.0f,0.5f,0.0f,1.0f };
+	// vertexData[1].texcoord = { 0.5f,0.0f };
+	////右下
+	// vertexData[2].position = { 0.5f,-0.5f,0.0f,1.0f };
+	// vertexData[2].texcoord = { 1.0f,1.0f };
+
+	////左下2
+	// vertexData[3].position = { -0.5f,-0.5f,0.5f,1.0f };
+	// vertexData[3].texcoord = { 0.0f,1.0f };
+	////上2
+	// vertexData[4].position = { 0.0f,0.0f,0.0f,1.0f };
+	// vertexData[4].texcoord = { 0.5f,0.0f };
+	////右下2
+	// vertexData[5].position = { 0.5f,-0.5f,-0.5f,1.0f };
+	// vertexData[5].texcoord = { 1.0f,1.0f };
+
 	// 頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferViewSprite{};
 	// リソースの先頭のアドレスから使う
@@ -974,14 +1073,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	emitter.transform.rotate = {0.0f, 0.0f, 0.0f};
 	emitter.transform.scale = {1.0f, 1.0f, 1.0f};
 
+	AccelerationField accelerationField;
+	accelerationField.acceleration = {15.0f, 0.0f, 0.0f};
+	accelerationField.area.min = {-1.0f, -1.0f, -1.0f};
+	accelerationField.area.max = {1.0f, 1.0f, 1.0f};
+
 	std::list<Particle> particles;
-	for (std::list<Particle>::iterator particleIterator = particles.begin(); 
-		particleIterator != particles.end();++particleIterator
-		) {
+	for (std::list<Particle>::iterator particleIterator = particles.begin(); particleIterator != particles.end(); ++particleIterator) {
 
 		particleIterator->transform.scale = {1.0f, 1.0f, 1.0f};
 		particleIterator->transform.rotate = {0.0f, 3.14f, 0.0f};
-		particleIterator->transform.translate = {0.1f,0.1f, 0.1f};
+		particleIterator->transform.translate = {0.1f, 0.1f, 0.1f};
 	}
 
 	// ビューポート
@@ -1019,6 +1121,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 単位行列を書き込んでおく
 	*transformationMatrixDataSprite = MakeIdentity4x4();
 
+	////TransformationMatrix用のリソースを作る。Matrix4x41つ分のサイズを用意
+	// ID3D12Resource* transformationMatrixResource = CreateBufferResource(device, sizeof(Matrix4x4));
+	////データを書き込む
+	// Matrix4x4* transformationMatrixData = nullptr;
+	////書き込むためのアドレスを取得
+	// transformationMatrixResource->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixDataSprite));
+	////単位行列を書き込んでおく
+	//*transformationMatrixData = MakeIdentity4x4();
+
 	// Textureを読んで転送する
 	DirectX::ScratchImage mipImages = LoadTexture("Resources/circle.png");
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
@@ -1044,16 +1155,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::mt19937 randomEngine(seeGenerator());
 	/*std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);*/
 
-
-	particles.push_back(MakeNewParticle(randomEngine,emitter.transform.translate));
+	particles.push_back(MakeNewParticle(randomEngine, emitter.transform.translate));
 	particles.push_back(MakeNewParticle(randomEngine, emitter.transform.translate));
 	particles.push_back(MakeNewParticle(randomEngine, emitter.transform.translate));
 	for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
 		// 一と速度を[-1,1]でランダムに初期化
-		
 	}
 
 	bool useBillBoard = false;
+	bool useWind = false;
 
 	MSG msg{};
 	// ウインドウの×ボタンが押されるまでループ
@@ -1080,7 +1190,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ImGui::DragFloat3("spriteScale", &transformSprite.scale.x, 0.01f);
 			ImGui::DragFloat3("spriteRotate", &transformSprite.rotate.x, 0.01f);
 			ImGui::Checkbox("useBillBoared", &useBillBoard);
-			if(ImGui::Button("Add Particle")) {
+			ImGui::Checkbox("useWind", &useWind);
+			if (ImGui::Button("Add Particle")) {
 				particles.splice(particles.end(), Emit(emitter, randomEngine));
 				particles.splice(particles.end(), Emit(emitter, randomEngine));
 				particles.splice(particles.end(), Emit(emitter, randomEngine));
@@ -1125,11 +1236,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			Matrix4x4 translateMatrix;
 
 			uint32_t numInstance = 0;
-			for (std::list<Particle>::iterator particleIterator = particles.begin(); particleIterator != particles.end(); ) {
+			for (std::list<Particle>::iterator particleIterator = particles.begin(); particleIterator != particles.end();) {
 				if (particleIterator->lifeTime <= particleIterator->currentTime) {
 					particleIterator = particles.erase(particleIterator);
 					continue;
 				}
+
+				// Fieldの範囲内のParticleに加速を適用
 
 				if (numInstance < kNumMaxInstance) {
 
@@ -1139,6 +1252,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					Matrix4x4 worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
 					Matrix4x4 viewProjectionMatrix = Multiply(viewMatrix, projectionMatrix);
 					Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+
+					if (useWind) {
+						if (IsCollision(accelerationField.area, particleIterator->transform.translate)) {
+							particleIterator->velocity += accelerationField.acceleration * kDeltaTime;
+						}
+					}
 
 					particleIterator->transform.translate += particleIterator->velocity * kDeltaTime;
 					particleIterator->currentTime += kDeltaTime;
@@ -1225,7 +1344,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			commandList->IASetIndexBuffer(&indexBufferViewSprite);
 
 			// TransformationMatrixCBufferの場所を設定
-			 /*commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResourceSprite->GetGPUVirtualAddress());*/
+			/*commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResourceSprite->GetGPUVirtualAddress());*/
 			// 描画
 			// commandList->DrawIndexedInstanced(6, 1, 0, 0,0);
 
