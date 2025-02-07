@@ -59,6 +59,9 @@ PixelShaderOutput main(VertexShaderOutput input)
         output.color.rgb = diffuse + specular;
     //ÉAÉãÉtÉ@ÇÕç°Ç‹Ç≈í ÇË
         output.color.a = gMaterial.color.a * textureColor.a;
+        float32_t3 halfVector = normalize(-gDirectionalLight.direction * toEye);
+        float NDoth = dot(normalize(input.normal), halfVector);
+        float specularPow = pow(saturate(NDoth), gMaterial.shininess);
     }
     else
     {
