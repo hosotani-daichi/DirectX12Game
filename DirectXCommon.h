@@ -17,7 +17,7 @@ public://メンバ変数
 	//初期化
 	void Initialize(WinApp* winApp);
 
-	Microsoft::WRL::ComPtr<ID3D12Resource>CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
+	Microsoft::WRL::ComPtr<ID3D12Resource>CreateDepthStencilTextureResource(Microsoft::WRL::ComPtr < ID3D12Device> device, int32_t width, int32_t height);
 	Microsoft::WRL::ComPtr<IDxcBlob>CompileShader(
 		//CompilerするShaderファイルへのパス
 		const std::wstring& filePath,
@@ -26,7 +26,7 @@ public://メンバ変数
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 	Microsoft::WRL::ComPtr <ID3D12Resource> CreateBufferResource(Microsoft::WRL::ComPtr <ID3D12Device> device, size_t sizeInBytes);
-	Microsoft::WRL::ComPtr<ID3D12Resource>CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
+	Microsoft::WRL::ComPtr<ID3D12Resource>CreateTextureResource(Microsoft::WRL::ComPtr < ID3D12Device> device,const DirectX::TexMetadata& metadata);
 	//DSV用のヒープでディスクリプタの数１。DSVはshader内で触るものではないので、ShaderVisibleはfalse
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap;/* = CreateDescriptorHeap(device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false)*/;
 
