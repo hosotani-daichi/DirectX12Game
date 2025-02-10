@@ -1,4 +1,5 @@
 ﻿#include "StringUtility.h"
+#include"DirectXCommon.h"
 #include<Windows.h>
 namespace StringUtility
 {
@@ -30,3 +31,4 @@ namespace StringUtility
 		return result;
 	}
 }
+

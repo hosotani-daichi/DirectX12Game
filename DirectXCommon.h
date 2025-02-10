@@ -30,8 +30,10 @@ public://メンバ変数
 	//DSV用のヒープでディスクリプタの数１。DSVはshader内で触るものではないので、ShaderVisibleはfalse
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap;/* = CreateDescriptorHeap(device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false)*/;
 
-	ID3D12Device* GetDevice() { return device.Get(); };
-	ID3D12GraphicsCommandList* GetCommandList()const { return commandList.Get(); }
+	 ID3D12Device* GetDevice() { return device.Get(); };
+	 ID3D12GraphicsCommandList*GetCommandList()const { return commandList.Get(); }
+	 ID3D12Resource* depthStencilResource = nullptr;
+
 	//描画前処理
 	void PreDraw();
 	//描画後処理
@@ -152,7 +154,7 @@ private://関数
 	DirectX::ScratchImage mipImages{};
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 
-	Microsoft::WRL::ComPtr <ID3D12Resource> textureResource = CreateTextureResource(GetDevice(), metadata);
+	Microsoft::WRL::ComPtr <ID3D12Resource> textureResource = nullptr;//CreateTextureResource(GetDevice(), metadata);
 
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
 
