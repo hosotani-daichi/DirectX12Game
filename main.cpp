@@ -660,7 +660,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	descriptionRootSignature.pStaticSamplers = staticSamplers;
 	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 
-
 	//ジリアライズしてバイナリにする
 	Microsoft::WRL::ComPtr <ID3DBlob> signatureBlob = nullptr;
 	Microsoft::WRL::ComPtr <ID3DBlob> errorBlob = nullptr;
