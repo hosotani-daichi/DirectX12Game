@@ -55,6 +55,8 @@ struct ModelDate {
 	std::vector<VertexData> vertices;
 };
 
+
+
 //ウィンドウプロシージャ
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
@@ -432,6 +434,8 @@ ModelDate LoadObjFile(const std::string& directoryPath, const std::string& filen
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
+	D3DResourceLeakChecker LeakChecker;
+
 	//ポインタ
 	WinApp* winApp = nullptr;
 	//WindowsAPIの初期化
@@ -451,20 +455,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//DirectXの初期化
 	dxCommon = new DirectXCommon();
 	dxCommon->Initialize(winApp);
-
-
-#ifdef _DEBUG
-	Microsoft::WRL::ComPtr <ID3D12Debug1> debugController = nullptr;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
-		//デバックレイヤーを有効化する
-		debugController->EnableDebugLayer();
-		//さらにGPU側でもチェックを行うようにする
-		debugController->SetEnableGPUBasedValidation(TRUE);
-	}
-
-#endif
-
-	D3DResourceLeakChecker LeakChecker;
 
 	//Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory = nullptr;
 
