@@ -84,18 +84,18 @@ private://関数
 	//ImGuiの初期化
 	void ImGuiInitilize(WinApp* winApp);
 
-	////FPS固定初期化
-	//void InitializeFixFPS();
-	////FPS固定更新
-	//void UpdateFixFPS();
+	//FPS固定初期化
+	void InitializeFixFPS();
+	//FPS固定更新
+	void UpdateFixFPS();
 
 	HRESULT hr{};
 
 	//WindosAPI
 	WinApp* winApp_ = nullptr;
 
-	////記録時間(FPS固定用)
-	//std::chrono::steady_clock::time_point reference_;
+	//記録時間(FPS固定用)
+	std::chrono::steady_clock::time_point reference_;
 
 	//DirectX12デバイス
 	Microsoft::WRL::ComPtr<ID3D12Device> device = nullptr;

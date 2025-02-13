@@ -2,6 +2,8 @@
 #include "Windows.h"
 #include "externals//imgui/imgui.h"
 
+#pragma comment(lib,"winmm.lib")
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 //ウィンドウプロシージャ
@@ -55,6 +57,9 @@ void WinApp::Initialize()
 		nullptr);
 
 	ShowWindow(hwnd, SW_SHOW);
+
+	//システムタイマーの分解能をあげる
+	timeBeginPeriod(1);
 }
 
 void WinApp::Update()
