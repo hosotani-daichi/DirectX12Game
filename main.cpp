@@ -124,6 +124,19 @@ void Log(const std::wstring& message) {
 	OutputDebugStringA(ConvertString(message).c_str());
 }
 
+Transform transform{ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+
+typedef void (*Callback)(int result);
+
+
+
+// 判定を行うコールバック関数
+void judge_result(int result) {
+
+	transform.rotate.y += 0.1f;
+}
+
+
 IDxcBlob* CompileShader(
 	//CompilerするShaderファイルへのパス
 	const std::wstring& filePath,
@@ -1157,6 +1170,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {//main関数
 			DispatchMessage(&msg);
 		}
 		else {
+			Callback callback = judge_result;
+
+			callback(0);
+
 			ImGui_ImplDX12_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
