@@ -1074,9 +1074,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		dxCommon->PostDraw();
 
 	}
-	//解放処理
 
-	CloseHandle(dxCommon->fenceEvent);
+	////解放処理
+	//CloseHandle(dxCommon->fenceEvent);
 
 	//WindowAPIの終了処理
 	winApp->Finalize();
@@ -1093,8 +1093,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 
-	//終了処理
-	CoUninitialize();
 
 	return 0;
 }
