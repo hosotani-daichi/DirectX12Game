@@ -83,6 +83,8 @@ private://関数
 	void CreateDCX();
 	//ImGuiの初期化
 	void ImGuiInitilize(WinApp* winApp);
+	//終了
+	void Finalize();
 
 	//FPS固定初期化
 	void InitializeFixFPS();

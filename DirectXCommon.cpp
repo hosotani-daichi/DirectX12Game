@@ -315,6 +315,18 @@ void DirectXCommon::ImGuiInitilize(WinApp* winApp)
 	);
 }
 
+void DirectXCommon::Finalize()
+{
+	//解放処理
+	CloseHandle(fenceEvent);
+
+	//ImGuiの終了処理。
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
+}
+
 void DirectXCommon::InitializeFixFPS()
 {
 	//現在時間を記録する
