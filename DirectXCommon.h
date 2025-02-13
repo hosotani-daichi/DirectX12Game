@@ -32,7 +32,7 @@ public://メンバ変数
 
 	 ID3D12Device* GetDevice() { return device.Get(); };
 	 ID3D12GraphicsCommandList*GetCommandList()const { return commandList.Get(); }
-	 ID3D12Resource* depthStencilResource = nullptr;
+	 Microsoft::WRL::ComPtr < ID3D12Resource> depthStencilResource = nullptr;
 
 	//描画前処理
 	void PreDraw();
@@ -52,7 +52,7 @@ public://メンバ変数
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);//DSV用
 	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
 
-	void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
+	void UploadTextureData(Microsoft::WRL::ComPtr < ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 
 	HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 
