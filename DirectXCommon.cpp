@@ -511,7 +511,8 @@ Microsoft::WRL::ComPtr<IDxcBlob> DirectXCommon::CompileShader(
 	assert(SUCCEEDED(hr));
 
 	//警告・エラーが出てたらログに出して止める
-	//Microsoft::WRL::ComPtr<IDxcBlobUtf8> shaderError = nullptr;
+	//
+	// ::WRL::ComPtr<IDxcBlobUtf8> shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
 		Logger::Log(shaderError->GetStringPointer());
