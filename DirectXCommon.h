@@ -56,6 +56,8 @@ public://メンバ変数
 
 	HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 
+	//終了
+	void Finalize();
 private://関数
 
 	//デバイスの生成
@@ -83,8 +85,6 @@ private://関数
 	void CreateDCX();
 	//ImGuiの初期化
 	void ImGuiInitilize(WinApp* winApp);
-	//終了
-	void Finalize();
 
 	//FPS固定初期化
 	void InitializeFixFPS();

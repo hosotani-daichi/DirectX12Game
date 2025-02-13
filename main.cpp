@@ -1078,6 +1078,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//WindowAPIの終了処理
 	winApp->Finalize();
 
+	dxCommon->Finalize();
+
 	//入力解放
 	delete input;
 	//WindowsAPI解放
